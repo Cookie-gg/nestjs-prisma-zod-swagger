@@ -56,9 +56,15 @@ export const zUser = extendApi(
 export class User extends createZodDto(zUser) {}
 
 export class CreateUserInput extends createZodDto(
-  zUser.omit({ createdAt: true, updatedAt: true }),
+  zUser.omit({
+    createdAt: true,
+    updatedAt: true,
+  }),
 ) {}
 
 export class UpdateUserInput extends createZodDto(
-  zUser.omit({ createdAt: true, updatedAt: true }),
+  zUser.omit({
+    createdAt: true,
+    updatedAt: true,
+  }),
 ) {}
