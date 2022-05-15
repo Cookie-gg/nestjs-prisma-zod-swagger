@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { isEmail } from 'class-validator';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
@@ -22,10 +22,12 @@ export class UserService {
   }
 
   async find(uniqueData: string): Promise<User> {
-    return this.userRepository.findOne(this.validateUniqueData(uniqueData));
+    const user = await this.userRepository.findOne(this.validateUniqueData(uniqueData));
+    if (!user) throw new NotFoundException('A user is not found');
+    return user;
   }
 
-  async update(uniqueData: string, updates: UpdateUserInput): Promise<UpdateResult> {
+  async update(uniqueData: string, updates: Partial<UpdateUserInput>): Promise<UpdateResult> {
     return this.userRepository.update(this.validateUniqueData(uniqueData), updates);
   }
 

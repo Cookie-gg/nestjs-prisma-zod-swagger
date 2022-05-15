@@ -9,9 +9,6 @@ import { patchNestjsSwagger } from '@anatine/zod-nestjs';
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
 
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
-
   patchNestjsSwagger();
 
   const document = SwaggerModule.createDocument(app, config);

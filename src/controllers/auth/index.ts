@@ -15,7 +15,7 @@ export class AuthController {
   @ApiBody({ type: LoginInput })
   @ApiResponse({ type: Auth })
   @UseGuards(AuthGuard('local'))
-  login(inputs: LoginInput, @Req() req?: { user: User }) {
+  login(@Req() req: { user: User }) {
     return this.authService.login(req.user);
   }
 
