@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { config } from '../ormconfig.test';
+import { config } from '~/libs/typeorm';
 import { mocks } from '~/mocks';
 import { UserController } from '~/controllers';
 import { UserModule } from '~/modules';
@@ -13,7 +13,7 @@ describe('UserController', () => {
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot({ ...config, entities: [UserEntity] }), UserModule],
+      imports: [TypeOrmModule.forRoot({ ...config().database, entities: [UserEntity] }), UserModule],
     }).compile();
     await module.get<UserService>(UserService).clear();
     controller = module.get<UserController>(UserController);

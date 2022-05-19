@@ -2,13 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { mocks } from '~/mocks';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { config } from '../ormconfig.test';
 import { TestResponse } from '~/types/api';
 import { AppModule } from '~/app.module';
 import { Auth } from '~/domain/models/auth';
 import { UserService } from '~/services';
 import { UserEntity } from '~/domain/entities/user';
 import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify';
+import { config } from '~/libs/typeorm';
 
 describe('AuthController (e2e)', () => {
   let app: NestFastifyApplication;
@@ -20,7 +20,7 @@ describe('AuthController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot({ ...config, entities: [UserEntity] }), AppModule],
+      imports: [TypeOrmModule.forRoot({ ...config().database, entities: [UserEntity] }), AppModule],
     }).compile();
     app = moduleFixture.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -48,9 +48,7 @@ describe('AuthController (e2e)', () => {
   });
 
   it('/auth/status (Get)', async () => {
-    const res: TestResponse<Auth> = await req
-      .get('/auth/status')
-      .set('authorization', `bearer ${token}`);
+    const res: TestResponse<Auth> = await req.get('/auth/status').set('authorization', `bearer ${token}`);
     token = res.body.token;
     refreshToken = res.body.refreshToken;
     Object.values([token, refreshToken]).map((token) => {
@@ -60,9 +58,7 @@ describe('AuthController (e2e)', () => {
   });
 
   it('/auth/refresh (Get)', async () => {
-    const res: TestResponse<Auth> = await req
-      .get('/auth/refresh')
-      .set('authorization', `bearer ${refreshToken}`);
+    const res: TestResponse<Auth> = await req.get('/auth/refresh').set('authorization', `bearer ${refreshToken}`);
     token = res.body.token;
     refreshToken = res.body.refreshToken;
     Object.values([token, refreshToken]).map((token) => {
