@@ -1,0 +1,4 @@
+{
+  "input": ["./prisma/schema/**/*.prisma"],
+  "output": "./prisma/schema.prisma"
+}
