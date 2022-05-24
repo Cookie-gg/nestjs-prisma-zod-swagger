@@ -56,9 +56,6 @@ $ npm run prisma:dev
 # setup prisma for test
 $ npm run prisma:test
 
-# run prisma docs
-$ npm run prisma:docs
-
 # run prisma studio
 $ npm run prisma:studio
 ```
