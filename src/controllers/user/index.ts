@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateUserInput, UpdateUserInput, User } from '~/domain/models/user';
+import { CreateUserInput, UpdateUserInput, User, zUser } from '~/domain/models/user';
 import { UserService } from '~/services';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
@@ -15,7 +15,7 @@ export class UserController {
   @ApiBody({ type: CreateUserInput })
   @ApiResponse({ type: User })
   async createUser(@Body() body: CreateUserInput) {
-    return await this.userService.create(body);
+    return await this.userService.create(zUser.parse(body));
   }
 
   @Get()
@@ -57,6 +57,6 @@ export class UserController {
   @ApiResponse({ type: User })
   @ApiOperation({ summary: 'Update user by unique data' })
   async updateUser(@Param() params: { id: string }, @Body() body: Partial<CreateUserInput>) {
-    return await this.userService.update(params.id, body);
+    return await this.userService.update(params.id, zUser.parse(body));
   }
 }

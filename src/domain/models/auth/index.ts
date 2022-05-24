@@ -25,13 +25,12 @@ export const zAuth = z.object({
 export class Auth extends createZodDto(zAuth) {}
 
 export const zLoginInput = z.object({
-  uniqueInfo: extendApi(z.string(), {
+  uniqueInfo: extendApi(z.string().nonempty(), {
     description: 'Uid and email are unique value',
     nullable: false,
     type: 'string',
-    minLength: 4,
   }),
-  password: extendApi(z.string(), {
+  password: extendApi(z.string().min(8), {
     description: 'The password of the user',
     nullable: false,
     type: 'string',

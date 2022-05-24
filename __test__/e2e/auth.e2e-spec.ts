@@ -1,14 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { mocks } from '~/mocks';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { TestResponse } from '~/types/api';
 import { AppModule } from '~/app.module';
 import { Auth } from '~/domain/models/auth';
 import { UserService } from '~/services';
-import { UserEntity } from '~/domain/entities/user';
 import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify';
-import { config } from '~/libs/typeorm';
 
 describe('AuthController (e2e)', () => {
   let app: NestFastifyApplication;
@@ -20,7 +17,7 @@ describe('AuthController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot({ ...config().database, entities: [UserEntity] }), AppModule],
+      imports: [AppModule],
     }).compile();
     app = moduleFixture.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

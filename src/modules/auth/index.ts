@@ -7,11 +7,7 @@ import { AuthService } from '~/services';
 import { JwtStrategy, JwtRefreshStrategy, LocalStrategy } from '~/strategies';
 
 @Module({
-  imports: [
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({}),
-    UserModule,
-  ],
+  imports: [PassportModule.register({ defaultStrategy: 'jwt' }), JwtModule.register({}), UserModule],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy],
 })

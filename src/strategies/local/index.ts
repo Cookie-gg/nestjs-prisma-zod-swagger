@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { UserService } from '~/services';
 import * as bcrypt from 'bcrypt';
-import { User } from '~/domain/models/user';
+import { zLoginInput } from '~/domain/models/auth';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
@@ -11,10 +11,11 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     super({ usernameField: 'uniqueInfo' });
   }
 
-  async validate(uniqueInfo: string, password: string): Promise<User> {
-    const user = await this.userService.find(uniqueInfo);
+  async validate(uniqueInfo: string, password: string) {
+    const results = zLoginInput.parse({ uniqueInfo, password });
+    const user = await this.userService.find(results.uniqueInfo);
     if (!user) throw new NotFoundException('Your email is uncorrect.');
-    if (!(await bcrypt.compare(password, user.password))) {
+    if (!(await bcrypt.compare(results.password, user.password))) {
       throw new UnauthorizedException('Your password is uncorrect.');
     }
     return user;

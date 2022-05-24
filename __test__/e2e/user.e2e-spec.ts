@@ -1,12 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { mocks } from '~/mocks';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { config } from '~/libs/typeorm';
 import { TestResponse } from '~/types/api';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { UserModule } from '~/modules/user';
-import { UserEntity } from '~/domain/entities/user';
 import { User } from '~/domain/models/user';
 import { UserService } from '~/services';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
@@ -17,7 +14,7 @@ describe('UserController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot({ ...config().database, entities: [UserEntity] }), UserModule],
+      imports: [UserModule],
     }).compile();
 
     app = moduleFixture.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

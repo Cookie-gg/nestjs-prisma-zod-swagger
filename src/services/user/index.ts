@@ -1,45 +1,54 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { isEmail } from 'class-validator';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { User, CreateUserInput, UpdateUserInput } from '~/domain/models/user';
-import { UserEntity } from '~/domain/entities/user';
+import { PrismaService } from '../prisma';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateUserInput): Promise<User> {
+  async create(data: Prisma.UserCreateInput) {
     data.password = await bcrypt.hash(data.password, 10);
-    return this.userRepository.save(data);
+    return this.prisma.user.create({ data });
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userRepository.find();
+  async findAll() {
+    return this.prisma.user.findMany();
   }
 
-  async find(uniqueData: string): Promise<User> {
-    const user = await this.userRepository.findOne(this.validateUniqueData(uniqueData));
+  async find(uniqueData: string) {
+    const user = await this.prisma.user.findUnique({ where: this.validateUniqueData(uniqueData) });
     if (!user) throw new NotFoundException('A user is not found');
     return user;
   }
 
-  async update(uniqueData: string, updates: Partial<UpdateUserInput>): Promise<UpdateResult> {
-    return this.userRepository.update(this.validateUniqueData(uniqueData), updates);
+  async update(uniqueData: string, updates: Prisma.UserUpdateInput) {
+    return this.prisma.user.update({ where: this.validateUniqueData(uniqueData), data: updates });
   }
 
-  async delete(uniqueData: string): Promise<DeleteResult> {
-    return this.userRepository.delete(this.validateUniqueData(uniqueData));
+  async delete(uniqueData: string) {
+    return this.prisma.user.delete({ where: this.validateUniqueData(uniqueData) });
   }
 
-  validateUniqueData(uniqueData: string): Partial<User> {
+  validateUniqueData(uniqueData: string): Prisma.UserWhereUniqueInput {
     return isEmail(uniqueData) ? { email: uniqueData } : { uid: uniqueData };
   }
 
+  async count() {
+    return this.prisma.user.count();
+  }
+
   async clear() {
-    return this.userRepository.clear();
+    const tableNames = (
+      (await this.prisma.$queryRawUnsafe(`SELECT user FROM pg_catalog.pg_tables WHERE hastriggers = true;`)) as {
+        tablename: string;
+      }[]
+    ).map(({ tablename }) => tablename);
+    await this.prisma.$transaction(
+      tableNames.map((tableName) =>
+        this.prisma.$queryRawUnsafe(`TRUNCATE TABLE "${tableName}" RESTART IDENTITY CASCADE;`),
+      ),
+    );
   }
 }
