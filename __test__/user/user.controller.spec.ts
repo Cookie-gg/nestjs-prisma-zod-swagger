@@ -31,12 +31,12 @@ describe('UserController', () => {
   });
 
   it('should update a user by unique data', async () => {
-    const user = await controller.updateUser({ id: mocks.user.user.uid }, { name: 'hogehgoe' });
-    expect(user).toStrictEqual(expect.objectContaining(mocks.user.user));
+    const user = await controller.updateUser({ id: mocks.user.user.uid }, { name: mocks.user.updatedName });
+    expect(user).toStrictEqual(expect.objectContaining({ ...mocks.user.user, name: mocks.user.updatedName }));
   });
 
   it('should delete a user by unique data', async () => {
     const user = await controller.deleteUser({ id: mocks.user.user.uid });
-    expect(user).toStrictEqual(expect.objectContaining(mocks.user.user));
+    expect(user).toStrictEqual(expect.objectContaining({ ...mocks.user.user, name: mocks.user.updatedName }));
   });
 });

@@ -57,6 +57,6 @@ export class UserController {
   @ApiResponse({ type: User })
   @ApiOperation({ summary: 'Update user by unique data' })
   async updateUser(@Param() params: { id: string }, @Body() body: Partial<CreateUserInput>) {
-    return await this.userService.update(params.id, zUser.parse(body));
+    return await this.userService.update(params.id, zUser.partial().parse(body));
   }
 }

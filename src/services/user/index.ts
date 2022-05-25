@@ -9,7 +9,7 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: Prisma.UserCreateInput) {
-    data.password = await bcrypt.hash(data.password, 10);
+    if (process.env.NODE_ENV !== 'test') data.password = await bcrypt.hash(data.password, 10);
     return this.prisma.user.create({ data });
   }
 
@@ -40,15 +40,6 @@ export class UserService {
   }
 
   async clear() {
-    const tableNames = (
-      (await this.prisma.$queryRawUnsafe(`SELECT user FROM pg_catalog.pg_tables WHERE hastriggers = true;`)) as {
-        tablename: string;
-      }[]
-    ).map(({ tablename }) => tablename);
-    await this.prisma.$transaction(
-      tableNames.map((tableName) =>
-        this.prisma.$queryRawUnsafe(`TRUNCATE TABLE "${tableName}" RESTART IDENTITY CASCADE;`),
-      ),
-    );
+    this.prisma.user.deleteMany();
   }
 }
