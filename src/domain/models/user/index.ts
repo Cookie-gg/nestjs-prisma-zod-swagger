@@ -4,7 +4,7 @@ import { createZodDto } from '@anatine/zod-nestjs';
 
 export const zUser = extendApi(
   z.object({
-    uid: extendApi(z.string().uuid().min(4), {
+    uid: extendApi(z.string().min(4), {
       description: 'The id of user',
       type: 'string',
       nullable: false,
