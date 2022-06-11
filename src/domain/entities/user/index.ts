@@ -2,13 +2,42 @@ import { extendApi } from '@anatine/zod-openapi';
 import { z } from 'zod';
 import { createZodDto } from '@anatine/zod-nestjs';
 
+export const zUserProfile = extendApi(
+  z.object({
+    uid: extendApi(z.number().optional(), {
+      description: 'The unique id of user',
+      type: 'number',
+      nullable: true,
+      uniqueItems: true,
+      readOnly: true,
+    }),
+    biography: extendApi(z.string(), {
+      description: 'The biography of user',
+      type: 'string',
+      nullable: false,
+    }),
+  }),
+  {
+    title: 'Profile',
+    description: 'A user profile schema',
+  },
+);
+
 export const zUser = extendApi(
   z.object({
-    uid: extendApi(z.string().min(4), {
+    uid: extendApi(z.number().optional(), {
+      description: 'The unique id of user',
+      type: 'number',
+      nullable: true,
+      uniqueItems: true,
+      readOnly: true,
+    }),
+    id: extendApi(z.string().min(4).max(12), {
       description: 'The id of user',
       type: 'string',
       nullable: false,
       minLength: 4,
+      maxLength: 40,
       uniqueItems: true,
     }),
     name: extendApi(z.string().nonempty(), {
@@ -22,11 +51,12 @@ export const zUser = extendApi(
       type: 'string',
       uniqueItems: true,
     }),
-    password: extendApi(z.string().min(8), {
+    password: extendApi(z.string().min(8).max(40), {
       description: 'Your password',
       nullable: false,
       type: 'string',
       minLength: 8,
+      maxLength: 40,
     }),
     published: extendApi(z.boolean().optional(), {
       description: 'Is Your account published?',
@@ -34,18 +64,19 @@ export const zUser = extendApi(
       default: false,
       type: 'boolean',
     }),
-    createdAt: extendApi(z.string().optional(), {
+    createdAt: extendApi(z.date().optional(), {
       description: 'The date which the user was created',
       readOnly: true,
       nullable: true,
-      type: 'string',
+      type: 'object',
     }),
-    updatedAt: extendApi(z.string().optional(), {
+    updatedAt: extendApi(z.date().optional(), {
       description: 'The date which the user was updated',
       readOnly: true,
       nullable: true,
-      type: 'string',
+      type: 'object',
     }),
+    profile: zUserProfile.nullable(),
   }),
   {
     title: 'User',
@@ -54,17 +85,3 @@ export const zUser = extendApi(
 );
 
 export class User extends createZodDto(zUser) {}
-
-export class CreateUserInput extends createZodDto(
-  zUser.omit({
-    createdAt: true,
-    updatedAt: true,
-  }),
-) {}
-
-export class UpdateUserInput extends createZodDto(
-  zUser.omit({
-    createdAt: true,
-    updatedAt: true,
-  }),
-) {}

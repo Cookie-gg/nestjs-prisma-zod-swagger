@@ -1,7 +1,10 @@
 import { generateMock } from '@anatine/zod-mock';
-import { zUser } from '~/domain/models/user';
+import { zUser, zUserProfile } from '~/domain/entities/user';
 
-const user = generateMock(zUser.omit({ createdAt: true, updatedAt: true }));
+const user = {
+  ...generateMock(zUser.omit({ uid: true, createdAt: true, updatedAt: true, profile: true })),
+  profile: generateMock(zUserProfile.omit({ uid: true })),
+};
 
 const users = [user];
 

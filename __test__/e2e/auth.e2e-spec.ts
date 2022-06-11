@@ -3,7 +3,7 @@ import * as request from 'supertest';
 import { mocks } from '~/mocks';
 import { TestResponse } from '~/types/api';
 import { AppModule } from '~/app.module';
-import { Auth } from '~/domain/models/auth';
+import { Auth } from '~/domain/entities/auth';
 import { UserService } from '~/services';
 import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify';
 
@@ -29,12 +29,12 @@ describe('AuthController (e2e)', () => {
   });
 
   afterAll(async () => {
-    await service.delete(mocks.user.user.uid);
+    await service.delete({ id: mocks.user.user.id });
     await app.close();
   });
 
   it('/auth (POST)', async () => {
-    const { uid: uniqueInfo } = mocks.user.user;
+    const { id: uniqueInfo } = mocks.user.user;
     const res: TestResponse<Auth> = await req.post('/auth').send({ uniqueInfo, password });
     token = res.body.token;
     refreshToken = res.body.refreshToken;

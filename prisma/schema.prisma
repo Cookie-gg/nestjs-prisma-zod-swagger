@@ -9,15 +9,23 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model Profile {
+  uid       Int    @id @default(autoincrement())
+  biography String
+  user      User   @relation(fields: [userUid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
+  userUid   Int    @unique
+}
+
 model User {
-  id        Int      @id @default(autoincrement())
-  uid       String   @unique
+  uid       Int      @id @default(autoincrement())
+  id        String   @unique
   email     String   @unique
   name      String
   password  String
-  published Boolean? @default(false)
+  published Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  profile   Profile?
 }
 
   

@@ -1,0 +1,10 @@
+model User {
+  uid       Int      @id @default(autoincrement())
+  id        String   @unique
+  email     String   @unique
+  name      String
+  password  String
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

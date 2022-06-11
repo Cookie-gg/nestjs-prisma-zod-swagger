@@ -1,8 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateUserInput, UpdateUserInput, User, zUser } from '~/domain/models/user';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { User, zUser } from '~/domain/entities/user';
 import { UserService } from '~/services';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
+import { CreateUserInput, UpdateUserInput } from '~/domain/bodies/user';
+import { GetUsersQuery } from '~/domain/queries/user';
+import { DeleteUserParameter, GetUserParameter } from '~/domain/parameters/user';
 
 @ApiTags('user')
 @Controller('user')
@@ -19,44 +22,41 @@ export class UserController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all users' })
+  @ApiOperation({ summary: 'Get users' })
+  @ApiQuery({ type: GetUsersQuery })
   @ApiResponse({ type: [User] })
-  async getAllUsers() {
-    return await this.userService.findAll();
+  async getUsers(@Query() query?: GetUsersQuery) {
+    return await this.userService.find(query);
   }
 
   @Get(':id')
   @ApiParam({
     name: 'id',
-    type: String,
+    type: GetUserParameter,
     description: 'You can use uid or email as a unique data',
   })
+  @ApiResponse({ type: User })
   @ApiOperation({ summary: 'Get user by unique data' })
-  async getUser(@Param() params: { id: string }) {
-    return await this.userService.find(params.id);
+  async getUser(@Param() param: GetUserParameter) {
+    return await this.userService.findOne(param);
   }
 
   @Delete(':id')
   @ApiParam({
     name: 'id',
-    type: String,
+    type: DeleteUserParameter,
     description: 'You can use uid or email as a unique data',
   })
   @ApiOperation({ summary: 'Delete user by unique data' })
-  async deleteUser(@Param() params: { id: string }) {
-    return await this.userService.delete(params.id);
+  async deleteUser(@Param() params: DeleteUserParameter) {
+    return await this.userService.delete(params);
   }
 
-  @Put(':id')
-  @ApiParam({
-    name: 'id',
-    type: String,
-    description: 'You can use uid or email as a unique data',
-  })
+  @Put()
   @ApiBody({ type: UpdateUserInput })
   @ApiResponse({ type: User })
   @ApiOperation({ summary: 'Update user by unique data' })
-  async updateUser(@Param() params: { id: string }, @Body() body: Partial<CreateUserInput>) {
-    return await this.userService.update(params.id, zUser.partial().parse(body));
+  async updateUser(@Body() body: UpdateUserInput) {
+    return await this.userService.update(body);
   }
 }
