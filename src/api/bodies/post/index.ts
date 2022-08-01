@@ -1,13 +1,14 @@
 import { createZodDto } from '@anatine/zod-nestjs';
 import { zPost } from '~/entities/post';
+import { zUser } from '~/entities/user';
 
-export class CreatePostInput extends createZodDto(
-  zPost.omit({
-    uid: true,
-    created_at: true,
-    updated_at: true,
-  }),
-) {}
+const zCreatePostInput = zPost.omit({
+  uid: true,
+  created_at: true,
+  updated_at: true,
+});
+
+export class CreatePostInput extends createZodDto(zCreatePostInput) {}
 
 export class UpdatePostInput extends createZodDto(
   zPost.omit({

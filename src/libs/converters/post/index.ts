@@ -1,44 +1,47 @@
 import { Prisma } from '@prisma/client';
-import { CreatePostInput } from '~/api/bodies/post';
+import { CreatePostInput, UpdatePostInput } from '~/api/bodies/post';
 import { DeletePostParameter, GetPostParameter } from '~/api/parameters/post';
 import { GetPostsQuery } from '~/api/queries/post';
 import { Post } from '~/entities/post';
 import { Topic } from '~/entities/topic';
 
-const connectOrCreate = (
-  topics: Topic[],
-  post_uid?: number,
-): Prisma.Enumerable<Prisma.TopicsOnPostsCreateOrConnectWithoutPostInput> | undefined =>
-  topics.map((topic) => {
-    const { name, icon, uid: topic_uid } = topic;
+const connectOrCreateTopics = (
+  post_id: string,
+  topics?: Topic[],
+): Prisma.Enumerable<Prisma.TopicsOnPostsCreateOrConnectWithoutPostInput> | undefined => {
+  if (!topics) return undefined;
+  return topics.map((topic) => {
+    const { name, icon } = topic;
+
     return {
-      where: {
-        topic_uid_post_uid: topic_uid && post_uid ? { topic_uid, post_uid } : undefined,
-      },
+      where: { topic_name_post_id: { topic_name: name, post_id } },
       create: { topic: { create: { name, icon } } },
     };
   });
+};
 
-const create = (post: Post): Prisma.PostUncheckedCreateInput => {
-  const { topics, ...rest } = post;
-  const { uid: post_uid } = rest;
+const create = (post: CreatePostInput): Prisma.XOR<Prisma.PostCreateInput, Prisma.PostUncheckedCreateInput> => {
+  const { topics, author_id, ...rest } = post;
+  const { id: post_id } = rest;
 
   return {
     ...rest,
     topics: {
-      connectOrCreate: connectOrCreate(topics, post_uid),
+      connectOrCreate: connectOrCreateTopics(post_id, topics),
+    },
+    author: {
+      connect: { id: author_id },
     },
   };
 };
 
-const update = (post: Post): Prisma.PostUncheckedCreateInput => {
+const update = (post: UpdatePostInput): Prisma.PostUncheckedCreateInput => {
   const { topics, ...rest } = post;
-  const { uid: post_uid } = rest;
-
+  const { id: post_id } = rest;
   return {
     ...rest,
     topics: {
-      connectOrCreate: connectOrCreate(topics, post_uid),
+      connectOrCreate: connectOrCreateTopics(post_id, topics),
     },
   };
 };
@@ -52,7 +55,7 @@ const getMany = (query?: GetPostsQuery): Prisma.PostWhereInput => {
         published: { equals: query.published },
         created_at: { equals: query.created_at },
         updated_at: { equals: query.updated_at },
-        author_uid: { equals: query.author_uid },
+        author_id: { contains: query.author_id },
       }
     : {};
 };

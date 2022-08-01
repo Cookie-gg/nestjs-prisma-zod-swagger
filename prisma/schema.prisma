@@ -15,19 +15,6 @@ enum From {
   qiita
 }
 
-model Post {
-  uid        Int             @id @default(autoincrement())
-  topics     TopicsOnPosts[]
-  id         String          @unique
-  title      String
-  from       From            @default(me)
-  published  Boolean         @default(false)
-  created_at DateTime        @default(now())
-  updated_at DateTime        @updatedAt
-  author     User            @relation(fields: [author_uid], references: [uid])
-  author_uid Int
-}
-
 model User {
   uid        Int      @id @default(autoincrement())
   id         String   @unique
@@ -41,11 +28,24 @@ model User {
   posts      Post[]
 }
 
+model Post {
+  id         String          @unique
+  topics     TopicsOnPosts[]
+  uid        Int             @id @default(autoincrement())
+  title      String
+  from       From            @default(me)
+  published  Boolean         @default(false)
+  created_at DateTime        @default(now())
+  updated_at DateTime        @updatedAt
+  author     User            @relation(fields: [author_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  author_id  String          @unique
+}
+
 model Profile {
   uid       Int    @id @default(autoincrement())
   biography String
-  user      User   @relation(fields: [user_uid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
-  user_uid  Int    @unique
+  user      User   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_id   String @unique
 }
 
 model Topic {
@@ -56,12 +56,12 @@ model Topic {
 }
 
 model TopicsOnPosts {
-  topic     Topic @relation(fields: [topic_uid], references: [uid])
-  topic_uid Int
-  post      Post  @relation(fields: [post_uid], references: [uid])
-  post_uid  Int
+  topic      Topic  @relation(fields: [topic_name], references: [name])
+  topic_name String
+  post       Post   @relation(fields: [post_id], references: [id])
+  post_id    String
 
-  @@id([topic_uid, post_uid])
+  @@id([topic_name, post_id])
 }
 
   

@@ -2,7 +2,7 @@ import { createZodDto } from '@anatine/zod-nestjs';
 import { extendApi } from '@anatine/zod-openapi';
 import { z } from 'zod';
 import { zTopic } from '~/entities/topic';
-import { zUser } from '~/entities/user';
+import { zUser } from '../user';
 
 const zFrom = z.enum(['me', 'zenn', 'qiita']);
 
@@ -48,15 +48,8 @@ export const zPost = extendApi(
       optional: true,
       type: 'object',
     }),
-    author_uid: extendApi(z.number(), {
-      description: 'The unique id of user',
-      type: 'number',
-      nullable: true,
-      uniqueItems: true,
-      readOnly: true,
-    }),
-    topics: zTopic.array(),
-    author: zUser
+    author_id: zUser.shape.id,
+    topics: z.object({ topic: zTopic }).array(),
   }),
   {
     title: 'Post',

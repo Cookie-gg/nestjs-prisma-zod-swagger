@@ -1,22 +1,22 @@
 model Topic {
-  uid   Int             @id @default(autoincrement())
-  name  String          @unique
-  icon  String
-  posts TopicsOnPosts[]
-
-  
+  uid    Int             @id @default(autoincrement())
+  name   String          @unique
+  icon   String
+  posts  TopicsOnPosts[]
+  Post   Post?           @relation(fields: [postId], references: [id])
+  postId String?
 }
 
 model Post {
-  uid    Int             @id @default(autoincrement())
-  topics TopicsOnPosts[]
+  id     String  @unique
+  topics Topic[]
 }
 
 model TopicsOnPosts {
-  topic     Topic @relation(fields: [topic_uid], references: [uid])
-  topic_uid Int
-  post      Post  @relation(fields: [post_uid], references: [uid])
-  post_uid  Int
+  topic      Topic  @relation(fields: [topic_name], references: [name])
+  topic_name String
+  // post       Post   @relation(fields: [post_id], references: [id])
+  // post_id    String
 
-  @@id([topic_uid, post_uid])
+  @@id([topic_name])
 }
