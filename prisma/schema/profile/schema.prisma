@@ -1,8 +1,8 @@
 model Profile {
-  uid       Int     @id @default(autoincrement())
+  uid       Int    @id @default(autoincrement())
   biography String
-  user      User    @relation(fields: [userUid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
-  userUid   Int     @unique
+  user      User   @relation(fields: [user_uid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
+  user_uid  Int    @unique
 }
 
 model User {

@@ -1,0 +1,22 @@
+enum From {
+  zenn
+  me
+  qiita
+}
+
+model Post {
+  uid        Int      @id @default(autoincrement())
+  id         String   @unique
+  title      String
+  from       From     @default(me)
+  published  Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  author     User     @relation(fields: [author_uid], references: [uid])
+  author_uid Int
+}
+
+model User {
+  uid   Int    @id @default(autoincrement())
+  posts Post[]
+}

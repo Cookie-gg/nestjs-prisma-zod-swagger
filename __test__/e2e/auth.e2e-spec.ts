@@ -3,7 +3,7 @@ import * as request from 'supertest';
 import { mocks } from '~/mocks';
 import { TestResponse } from '~/types/api';
 import { AppModule } from '~/app.module';
-import { Auth } from '~/domain/entities/auth';
+import { Auth } from '~/entities/auth';
 import { UserService } from '~/services';
 import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify';
 

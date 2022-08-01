@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
-import { UserService } from '~/services';
+import { UserService } from '~/services/user';
 import * as bcrypt from 'bcrypt';
-import { LoginUserInput } from '~/domain/bodies/user';
+import { LoginUserInput } from '~/api/bodies/user';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {

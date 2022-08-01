@@ -1,39 +1,23 @@
-import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { ApiBody, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { LoginUserInput } from '~/domain/bodies/user';
-import { Auth } from '~/domain/entities/auth';
-import { User } from '~/domain/entities/user';
-import { AuthService } from '~/services';
+import { Req } from '@nestjs/common';
+import { AuthDecorator } from '~/decorators/auth';
+import { User } from '~/entities/user';
+import { AuthService } from '~/services/auth';
 
-@ApiTags('auth')
-@Controller('auth')
+@AuthDecorator.Controller
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  @ApiOperation({ summary: 'Login user' })
-  @ApiBody({ type: LoginUserInput })
-  @ApiResponse({ type: Auth })
-  @UseGuards(AuthGuard('local'))
+  @AuthDecorator.Login
   login(@Req() req: { user: User }) {
     return this.authService.login(req.user);
   }
 
-  @Get('status')
-  @ApiOperation({ summary: 'Check logging status' })
-  @ApiHeader({ name: 'authorization', description: 'must be started with "bearer"' })
-  @ApiResponse({ type: Auth })
-  @UseGuards(AuthGuard('jwt'))
+  @AuthDecorator.Status
   status(@Req() req: { user: User }) {
     return this.authService.login(req.user);
   }
 
-  @Get('refresh')
-  @ApiHeader({ name: 'authorization', description: 'must be started with "bearer"' })
-  @ApiOperation({ summary: 'Refresh token' })
-  @ApiResponse({ type: Auth })
-  @UseGuards(AuthGuard('jwt-refresh'))
+  @AuthDecorator.Refresh
   refresh(@Req() req: { user: User }) {
     return this.authService.login(req.user);
   }

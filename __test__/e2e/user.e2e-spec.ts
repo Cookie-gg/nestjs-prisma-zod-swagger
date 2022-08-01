@@ -4,7 +4,7 @@ import { mocks } from '~/mocks';
 import { TestResponse } from '~/types/api';
 import { UpdateResult } from 'typeorm';
 import { UserModule } from '~/modules/user';
-import { User } from '~/domain/entities/user';
+import { User } from '~/entities/user';
 import { UserService } from '~/services';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 

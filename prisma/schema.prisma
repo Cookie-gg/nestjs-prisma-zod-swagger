@@ -9,23 +9,59 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Profile {
-  uid       Int    @id @default(autoincrement())
-  biography String
-  user      User   @relation(fields: [userUid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
-  userUid   Int    @unique
+enum From {
+  zenn
+  me
+  qiita
+}
+
+model Post {
+  uid        Int             @id @default(autoincrement())
+  topics     TopicsOnPosts[]
+  id         String          @unique
+  title      String
+  from       From            @default(me)
+  published  Boolean         @default(false)
+  created_at DateTime        @default(now())
+  updated_at DateTime        @updatedAt
+  author     User            @relation(fields: [author_uid], references: [uid])
+  author_uid Int
 }
 
 model User {
-  uid       Int      @id @default(autoincrement())
-  id        String   @unique
-  email     String   @unique
-  name      String
-  password  String
-  published Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  profile   Profile?
+  uid        Int      @id @default(autoincrement())
+  id         String   @unique
+  email      String   @unique
+  name       String
+  password   String
+  published  Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  profile    Profile?
+  posts      Post[]
+}
+
+model Profile {
+  uid       Int    @id @default(autoincrement())
+  biography String
+  user      User   @relation(fields: [user_uid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
+  user_uid  Int    @unique
+}
+
+model Topic {
+  uid   Int             @id @default(autoincrement())
+  name  String          @unique
+  icon  String
+  posts TopicsOnPosts[]
+}
+
+model TopicsOnPosts {
+  topic     Topic @relation(fields: [topic_uid], references: [uid])
+  topic_uid Int
+  post      Post  @relation(fields: [post_uid], references: [uid])
+  post_uid  Int
+
+  @@id([topic_uid, post_uid])
 }
 
   
