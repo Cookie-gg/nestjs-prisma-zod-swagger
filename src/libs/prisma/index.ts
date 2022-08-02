@@ -1,4 +1,4 @@
-const user = { profile: true };
+const user = { profile: { select: { uid: true, biography: true } } };
 
 const post = { topics: true };
 

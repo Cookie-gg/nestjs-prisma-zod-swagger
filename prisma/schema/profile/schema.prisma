@@ -1,4 +1,5 @@
 model User {
+  uid     Int      @id @default(autoincrement())
   id      String   @unique
   profile Profile?
 }

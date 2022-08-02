@@ -60,6 +60,7 @@
     "zod": "^3.17.10"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.3.0",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.1",
     "@nestjs/testing": "^9.0.7",
@@ -69,10 +70,10 @@
     "@types/passport-jwt": "^3.0.6",
     "@types/passport-local": "^1.0.34",
     "@types/supertest": "^2.0.12",
-    "@typescript-eslint/eslint-plugin": "^5.31.0",
-    "@typescript-eslint/parser": "^5.31.0",
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "@typescript-eslint/parser": "^5.32.0",
     "dotenv-cli": "^6.0.0",
-    "eslint": "^8.20.0",
+    "eslint": "^8.21.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^28.1.3",

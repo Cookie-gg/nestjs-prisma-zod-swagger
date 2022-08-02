@@ -5,6 +5,7 @@ import { Post } from '~/entities/post';
 import { postConverter } from '~/libs/converters/post';
 import { GetPostsQuery } from '~/api/queries/post';
 import { prismaIncludeQuery } from '~/libs/prisma';
+import { mockPost } from '~/mocks/post';
 
 const include = prismaIncludeQuery.post;
 
@@ -21,7 +22,6 @@ export class PostService {
   }
 
   async find(query?: GetPostsQuery): Promise<Post[]> {
-    
     const where = postConverter.getMany(query);
     return this.prisma.post.findMany({ where, include });
   }

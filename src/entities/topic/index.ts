@@ -11,7 +11,7 @@ export const zTopic = extendApi(
       readOnly: true,
       optional: true,
     }),
-    name: extendApi(z.string().min(1), {
+    name: extendApi(z.string().min(1).trim(), {
       description: 'The id of a post (slug)',
       type: 'string',
       uniqueItems: true,

@@ -16,7 +16,6 @@ export class PostController {
 
   @PostDecorator.GetMany
   async getUsers(@Query() query?: GetPostsQuery) {
-    console.log(query);
     return await this.postService.find(query);
   }
 

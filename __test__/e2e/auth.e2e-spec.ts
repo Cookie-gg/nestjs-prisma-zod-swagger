@@ -2,9 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { mocks } from '~/mocks';
 import { TestResponse } from '~/types/api';
-import { AppModule } from '~/app.module';
+import { AppModule } from '~/modules/app';
 import { Auth } from '~/entities/auth';
-import { UserService } from '~/services';
+import { UserService } from '~/services/user';
 import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify';
 
 describe('AuthController (e2e)', () => {

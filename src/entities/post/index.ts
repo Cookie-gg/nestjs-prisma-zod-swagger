@@ -15,7 +15,7 @@ export const zPost = extendApi(
       readOnly: true,
       optional: true,
     }),
-    id: extendApi(z.string().min(8), {
+    id: extendApi(z.string().min(8).max(40), {
       description: 'The id of post (slug)',
       type: 'string',
       uniqueItems: true,
@@ -30,7 +30,7 @@ export const zPost = extendApi(
       type: 'string',
       optional: true,
     }),
-    published: extendApi(z.boolean().optional().default(false), {
+    published: extendApi(z.boolean().optional(), {
       description: 'Is a post published?',
       default: false,
       optional: true,

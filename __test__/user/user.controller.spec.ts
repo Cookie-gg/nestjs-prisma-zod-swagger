@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { mocks } from '~/mocks';
-import { UserController } from '~/controllers';
-import { UserModule } from '~/modules';
-import { UserService } from '~/services';
+import { UserController } from '~/controllers/user';
+import { UserModule } from '~/modules/user';
+import { UserService } from '~/services/user';
 import { NotFoundException } from '@nestjs/common';
 
 describe('UserController', () => {
@@ -23,33 +23,17 @@ describe('UserController', () => {
 
   it('should create a user', async () => {
     const user = await controller.createUser(mocks.user.user);
-    expect(user).toStrictEqual(
-      expect.objectContaining({
-        ...mocks.user.user,
-        profile: expect.objectContaining(mocks.user.user.profile),
-      }),
-    );
+    expect(user).toStrictEqual(expect.objectContaining(mocks.user.user));
   });
 
   it('should get a user by unique data', async () => {
     const user = await controller.getUser({ id: mocks.user.user.id });
-    expect(user).toStrictEqual(
-      expect.objectContaining({
-        ...mocks.user.user,
-        profile: expect.objectContaining(mocks.user.user.profile),
-      }),
-    );
+    expect(user).toStrictEqual(expect.objectContaining(mocks.user.user));
   });
 
   it('should update a user by unique data', async () => {
     const user = await controller.updateUser({ ...mocks.user.user, name: mocks.user.updatedName });
-    expect(user).toStrictEqual(
-      expect.objectContaining({
-        ...mocks.user.user,
-        name: mocks.user.updatedName,
-        profile: expect.objectContaining(mocks.user.user.profile),
-      }),
-    );
+    expect(user).toStrictEqual(expect.objectContaining({ ...mocks.user.user, name: mocks.user.updatedName }));
   });
 
   it('should throw error for getting a deleted user', async () => {
