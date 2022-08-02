@@ -1,5 +1,12 @@
 
-    
+    // model TopicsOnPosts {
+//   topic      Topic  @relation(fields: [topic_name], references: [name])
+//   topic_name String
+//   post       Post   @relation(fields: [post_id], references: [id])
+//   post_id    String
+//   @@id([topic_name, post_id])
+// }
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -29,16 +36,16 @@ model User {
 }
 
 model Post {
-  id         String          @unique
-  topics     TopicsOnPosts[]
-  uid        Int             @id @default(autoincrement())
+  uid        Int      @id @default(autoincrement())
+  id         String   @unique
+  topics     Topic[]
   title      String
-  from       From            @default(me)
-  published  Boolean         @default(false)
-  created_at DateTime        @default(now())
-  updated_at DateTime        @updatedAt
-  author     User            @relation(fields: [author_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  author_id  String          @unique
+  from       From     @default(me)
+  published  Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  author     User     @relation(fields: [author_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  author_id  String   @unique
 }
 
 model Profile {
@@ -49,19 +56,10 @@ model Profile {
 }
 
 model Topic {
-  uid   Int             @id @default(autoincrement())
-  name  String          @unique
+  uid   Int    @id @default(autoincrement())
+  name  String @unique
   icon  String
-  posts TopicsOnPosts[]
-}
-
-model TopicsOnPosts {
-  topic      Topic  @relation(fields: [topic_name], references: [name])
-  topic_name String
-  post       Post   @relation(fields: [post_id], references: [id])
-  post_id    String
-
-  @@id([topic_name, post_id])
+  posts Post[]
 }
 
   
