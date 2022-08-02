@@ -49,7 +49,7 @@ export const zPost = extendApi(
       type: 'object',
     }),
     author_id: zUser.shape.id,
-    topics: z.object({ topic: zTopic }).array(),
+    topics: zTopic.array(),
   }),
   {
     title: 'Post',

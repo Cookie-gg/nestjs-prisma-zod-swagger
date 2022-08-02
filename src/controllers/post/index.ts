@@ -14,23 +14,24 @@ export class PostController {
     return await this.postService.create(zPost.parse(body));
   }
 
-  // @PostDecorator.Get
-  // async getUsers(@Query() query?: GetPostsQuery) {
-  //   return await this.postService.find(query);
-  // }
+  @PostDecorator.GetMany
+  async getUsers(@Query() query?: GetPostsQuery) {
+    console.log(query);
+    return await this.postService.find(query);
+  }
 
-  // @PostDecorator.GetMany
-  // async getUser(@Param() param: GetPostParameter) {
-  //   return await this.postService.findOne(param);
-  // }
+  @PostDecorator.Get
+  async getUser(@Param() param: GetPostParameter) {
+    return await this.postService.findOne(param);
+  }
 
-  // @PostDecorator.Delete
-  // async deleteUser(@Param() params: DeletePostParameter) {
-  //   return await this.postService.delete(params);
-  // }
+  @PostDecorator.Delete
+  async deleteUser(@Param() params: DeletePostParameter) {
+    return await this.postService.delete(params);
+  }
 
-  // @PostDecorator.Update
-  // async updateUser(@Body() body: Post) {
-  //   return await this.postService.update(body);
-  // }
+  @PostDecorator.Update
+  async updateUser(@Body() body: Post) {
+    return await this.postService.update(body);
+  }
 }

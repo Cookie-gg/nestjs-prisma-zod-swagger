@@ -2,32 +2,29 @@ import { Prisma } from '@prisma/client';
 import { CreatePostInput, UpdatePostInput } from '~/api/bodies/post';
 import { DeletePostParameter, GetPostParameter } from '~/api/parameters/post';
 import { GetPostsQuery } from '~/api/queries/post';
-import { Post } from '~/entities/post';
 import { Topic } from '~/entities/topic';
 
 const connectOrCreateTopics = (
-  post_id: string,
   topics?: Topic[],
-): Prisma.Enumerable<Prisma.TopicsOnPostsCreateOrConnectWithoutPostInput> | undefined => {
+): Prisma.Enumerable<Prisma.TopicCreateOrConnectWithoutPostsInput> | undefined => {
   if (!topics) return undefined;
   return topics.map((topic) => {
     const { name, icon } = topic;
 
     return {
-      where: { topic_name_post_id: { topic_name: name, post_id } },
-      create: { topic: { create: { name, icon } } },
+      where: { name },
+      create: { name, icon },
     };
   });
 };
 
 const create = (post: CreatePostInput): Prisma.XOR<Prisma.PostCreateInput, Prisma.PostUncheckedCreateInput> => {
   const { topics, author_id, ...rest } = post;
-  const { id: post_id } = rest;
 
   return {
     ...rest,
     topics: {
-      connectOrCreate: connectOrCreateTopics(post_id, topics),
+      connectOrCreate: connectOrCreateTopics(topics),
     },
     author: {
       connect: { id: author_id },
@@ -35,13 +32,16 @@ const create = (post: CreatePostInput): Prisma.XOR<Prisma.PostCreateInput, Prism
   };
 };
 
-const update = (post: UpdatePostInput): Prisma.PostUncheckedCreateInput => {
-  const { topics, ...rest } = post;
-  const { id: post_id } = rest;
+const update = (post: UpdatePostInput): Prisma.XOR<Prisma.PostUpdateInput, Prisma.PostUncheckedUpdateInput> => {
+  const { topics, author_id, ...rest } = post;
+
   return {
     ...rest,
     topics: {
-      connectOrCreate: connectOrCreateTopics(post_id, topics),
+      connectOrCreate: connectOrCreateTopics(topics),
+    },
+    author: {
+      connect: { id: author_id },
     },
   };
 };
@@ -56,6 +56,7 @@ const getMany = (query?: GetPostsQuery): Prisma.PostWhereInput => {
         created_at: { equals: query.created_at },
         updated_at: { equals: query.updated_at },
         author_id: { contains: query.author_id },
+        topics: { some: { AND: query.topics?.map((topic) => ({ name: { contains: topic.name } })) } },
       }
     : {};
 };

@@ -14,14 +14,14 @@ const create = applyDecorators(
   ApiResponse({ type: PostEntity }),
 );
 
-const get = applyDecorators(
+const getMany = applyDecorators(
   Get(),
   ApiOperation({ summary: 'Get posts' }),
   ApiQuery({ type: GetPostsQuery }),
   ApiResponse({ type: [PostEntity] }),
 );
 
-const getMany = applyDecorators(
+const get = applyDecorators(
   Get(':id'),
   ApiParam({
     name: 'id',
