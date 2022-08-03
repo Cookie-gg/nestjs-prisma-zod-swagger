@@ -2,9 +2,9 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app.module';
-import { config } from './libs/swagger';
+import { config } from '~/libs/swagger';
 import { patchNestjsSwagger } from '@anatine/zod-nestjs';
+import { AppModule } from '~/modules/app';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());

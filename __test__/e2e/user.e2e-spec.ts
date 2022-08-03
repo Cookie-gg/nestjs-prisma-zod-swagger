@@ -4,8 +4,8 @@ import { mocks } from '~/mocks';
 import { TestResponse } from '~/types/api';
 import { UpdateResult } from 'typeorm';
 import { UserModule } from '~/modules/user';
-import { User } from '~/domain/entities/user';
-import { UserService } from '~/services';
+import { User } from '~/entities/user';
+import { UserService } from '~/services/user';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 
 describe('UserController (e2e)', () => {
@@ -29,20 +29,14 @@ describe('UserController (e2e)', () => {
   it('/user (POST)', async () => {
     const res: TestResponse<User> = await req.post('/user').send(mocks.user.user);
     expect(res.body).toStrictEqual(
-      expect.objectContaining({
-        ...mocks.user.user,
-        profile: expect.objectContaining(mocks.user.user.profile),
-      }),
+      expect.objectContaining<User>({ ...mocks.user.user, profile: expect.objectContaining(mocks.user.user.profile) }),
     );
   });
 
   it('/user:id (Get)', async () => {
     const res: TestResponse<User> = await req.get(`/user/${mocks.user.user.id}`);
     expect(res.body).toStrictEqual(
-      expect.objectContaining({
-        ...mocks.user.user,
-        profile: expect.objectContaining(mocks.user.user.profile),
-      }),
+      expect.objectContaining<User>({ ...mocks.user.user, profile: expect.objectContaining(mocks.user.user.profile) }),
     );
   });
 
@@ -52,7 +46,7 @@ describe('UserController (e2e)', () => {
       name: mocks.user.updatedName,
     });
     expect(res.body).toStrictEqual(
-      expect.objectContaining({
+      expect.objectContaining<User>({
         ...mocks.user.user,
         name: mocks.user.updatedName,
         profile: expect.objectContaining(mocks.user.user.profile),

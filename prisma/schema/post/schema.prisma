@@ -1,0 +1,23 @@
+model User {
+  uid Int @id @default(autoincrement())
+  id    String @unique
+  posts Post[]
+}
+
+enum From {
+  zenn
+  me
+  qiita
+}
+
+model Post {
+  uid        Int      @id @default(autoincrement())
+  id         String   @unique
+  title      String
+  from       From     @default(me)
+  published  Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  author     User     @relation(fields: [author_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  author_id  String   @unique
+}

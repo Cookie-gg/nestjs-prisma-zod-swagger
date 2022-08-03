@@ -19,5 +19,25 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     'prettier/prettier': ['error', { printWidth: 120 }],
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      {
+        varsIgnorePattern: /^_/,
+        argsIgnorePattern: /^_/,
+      },
+    ],
   },
+  overrides: [
+    {
+      files: ['**/*.ts'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            patterns: ['../'],
+          },
+        ],
+      },
+    },
+  ],
 };

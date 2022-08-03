@@ -1,0 +1,21 @@
+model Topic {
+  uid   Int    @id @default(autoincrement())
+  name  String @unique
+  icon  String
+  posts Post[]
+}
+
+model Post {
+  uid    Int     @id @default(autoincrement())
+  id     String  @unique
+  topics Topic[]
+}
+
+// model TopicsOnPosts {
+//   topic      Topic  @relation(fields: [topic_name], references: [name])
+//   topic_name String
+//   post       Post   @relation(fields: [post_id], references: [id])
+//   post_id    String
+
+//   @@id([topic_name, post_id])
+// }

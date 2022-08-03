@@ -1,11 +1,12 @@
-model Profile {
-  uid       Int     @id @default(autoincrement())
-  biography String
-  user      User    @relation(fields: [userUid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
-  userUid   Int     @unique
-}
-
 model User {
   uid     Int      @id @default(autoincrement())
+  id      String   @unique
   profile Profile?
+}
+
+model Profile {
+  uid       Int    @id @default(autoincrement())
+  biography String
+  user      User   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_id   String @unique
 }

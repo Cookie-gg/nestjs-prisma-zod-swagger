@@ -1,5 +1,12 @@
 
-    
+    // model TopicsOnPosts {
+//   topic      Topic  @relation(fields: [topic_name], references: [name])
+//   topic_name String
+//   post       Post   @relation(fields: [post_id], references: [id])
+//   post_id    String
+//   @@id([topic_name, post_id])
+// }
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -9,23 +16,50 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Profile {
-  uid       Int    @id @default(autoincrement())
-  biography String
-  user      User   @relation(fields: [userUid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
-  userUid   Int    @unique
+enum From {
+  zenn
+  me
+  qiita
 }
 
 model User {
-  uid       Int      @id @default(autoincrement())
-  id        String   @unique
-  email     String   @unique
-  name      String
-  password  String
-  published Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  profile   Profile?
+  uid        Int      @id @default(autoincrement())
+  id         String   @unique
+  email      String   @unique
+  name       String
+  password   String
+  published  Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  profile    Profile?
+  posts      Post[]
+}
+
+model Post {
+  uid        Int      @id @default(autoincrement())
+  id         String   @unique
+  topics     Topic[]
+  title      String
+  from       From     @default(me)
+  published  Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  author     User     @relation(fields: [author_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  author_id  String   @unique
+}
+
+model Profile {
+  uid       Int    @id @default(autoincrement())
+  biography String
+  user      User   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_id   String @unique
+}
+
+model Topic {
+  uid   Int    @id @default(autoincrement())
+  name  String @unique
+  icon  String
+  posts Post[]
 }
 
   
