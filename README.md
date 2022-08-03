@@ -62,7 +62,7 @@ $ npm run prisma:studio
 
 ## Databse
 
-You can use[MySQL](https://github.com/Cookie-gg/mysql-docker)
+You can use [MySQL](https://github.com/Cookie-gg/mysql-docker)
 
 ```bash
 # build container
@@ -75,8 +75,11 @@ docker compose down
 ## Test
 
 ```bash
-# unit tests
+# run all test
 $ npm run test
+
+# unit tests
+$ npm run test:unit
 
 # e2e tests
 $ npm run test:e2e
