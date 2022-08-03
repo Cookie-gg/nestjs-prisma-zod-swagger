@@ -1,9 +1,8 @@
 import { Prisma } from '@prisma/client';
-import { isEmail } from 'class-validator';
 import { CreateUserInput, UpdateUserInput } from '~/api/bodies/user';
 import { DeleteUserParameter, GetUserParameter } from '~/api/parameters/user';
 import { GetUsersQuery } from '~/api/queries/user';
-import { User } from '~/entities/user';
+import { isEmail } from '~/libs/zod';
 
 const create = (user: CreateUserInput): Prisma.UserUncheckedCreateInput => {
   const { profile, ...rest } = user;
