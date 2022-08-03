@@ -15,22 +15,22 @@ export class PostController {
   }
 
   @PostDecorator.GetMany
-  async getUsers(@Query() query?: GetPostsQuery) {
+  async getPosts(@Query() query?: GetPostsQuery) {
     return await this.postService.find(query);
   }
 
   @PostDecorator.Get
-  async getUser(@Param() param: GetPostParameter) {
+  async getPost(@Param() param: GetPostParameter) {
     return await this.postService.findOne(param);
   }
 
   @PostDecorator.Delete
-  async deleteUser(@Param() params: DeletePostParameter) {
+  async deletePost(@Param() params: DeletePostParameter) {
     return await this.postService.delete(params);
   }
 
   @PostDecorator.Update
-  async updateUser(@Body() body: Post) {
+  async updatePost(@Body() body: Post) {
     return await this.postService.update(body);
   }
 }

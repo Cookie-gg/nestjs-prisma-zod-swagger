@@ -24,11 +24,12 @@
     "prisma:migrate:test": "dotenv -e .env.test -- prisma migrate dev --name test",
     "prisma:generate:dev": "dotenv -e .env.development -- prisma generate",
     "prisma:generate:test": "dotenv -e .env.test -- prisma generate",
-    "test": "dotenv -e .env.test -- jest",
+    "test": "run-s test:unit test:e2e",
+    "test:unit": "run-s prisma:cleanup && dotenv -e .env.test -- jest",
+    "test:e2e": "run-s prisma:cleanup && dotenv -e .env.test -- jest --config ./jest-e2e.config.js",
     "test:watch": "dotenv -e .env.test -- jest --watch",
     "test:cov": "dotenv -e .env.test -- jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "dotenv -e .env.test -- jest --config ./jest-e2e.config.js"
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
     "@anatine/zod-mock": "^3.5.6",

@@ -2,7 +2,9 @@ import { Prisma } from '@prisma/client';
 import { CreatePostInput, UpdatePostInput } from '~/api/bodies/post';
 import { DeletePostParameter, GetPostParameter } from '~/api/parameters/post';
 import { GetPostsQuery } from '~/api/queries/post';
+import { Post } from '~/entities/post';
 import { Topic } from '~/entities/topic';
+import { mocks } from '~/mocks';
 
 const connectOrCreateTopics = (
   topics?: Topic[],
@@ -18,8 +20,8 @@ const connectOrCreateTopics = (
   });
 };
 
-const create = (post: CreatePostInput): Prisma.XOR<Prisma.PostCreateInput, Prisma.PostUncheckedCreateInput> => {
-  const { topics, author_id, ...rest } = post;
+const create = (post: Post): Prisma.XOR<Prisma.PostCreateInput, Prisma.PostUncheckedCreateInput> => {
+  const { uid: _, topics, author_id, ...rest } = post;
 
   return {
     ...rest,
@@ -32,8 +34,8 @@ const create = (post: CreatePostInput): Prisma.XOR<Prisma.PostCreateInput, Prism
   };
 };
 
-const update = (post: UpdatePostInput): Prisma.XOR<Prisma.PostUpdateInput, Prisma.PostUncheckedUpdateInput> => {
-  const { topics, author_id, ...rest } = post;
+const update = (post: Post): Prisma.XOR<Prisma.PostUpdateInput, Prisma.PostUncheckedUpdateInput> => {
+  const { uid: _, topics, author_id, ...rest } = post;
 
   return {
     ...rest,
@@ -47,6 +49,7 @@ const update = (post: UpdatePostInput): Prisma.XOR<Prisma.PostUpdateInput, Prism
 };
 
 const getMany = (query?: GetPostsQuery): Prisma.PostWhereInput => {
+  console.log(mocks.post.post);
   return query
     ? {
         id: { contains: query.id },

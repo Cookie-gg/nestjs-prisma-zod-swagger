@@ -28,12 +28,16 @@ describe('UserController (e2e)', () => {
 
   it('/user (POST)', async () => {
     const res: TestResponse<User> = await req.post('/user').send(mocks.user.user);
-    expect(res.body).toStrictEqual(expect.objectContaining(mocks.user.user));
+    expect(res.body).toStrictEqual(
+      expect.objectContaining<User>({ ...mocks.user.user, profile: expect.objectContaining(mocks.user.user.profile) }),
+    );
   });
 
   it('/user:id (Get)', async () => {
     const res: TestResponse<User> = await req.get(`/user/${mocks.user.user.id}`);
-    expect(res.body).toStrictEqual(expect.objectContaining(mocks.user.user));
+    expect(res.body).toStrictEqual(
+      expect.objectContaining<User>({ ...mocks.user.user, profile: expect.objectContaining(mocks.user.user.profile) }),
+    );
   });
 
   it('/user:id (Update)', async () => {
@@ -41,7 +45,13 @@ describe('UserController (e2e)', () => {
       ...mocks.user.user,
       name: mocks.user.updatedName,
     });
-    expect(res.body).toStrictEqual(expect.objectContaining({ ...mocks.user.user, name: mocks.user.updatedName }));
+    expect(res.body).toStrictEqual(
+      expect.objectContaining<User>({
+        ...mocks.user.user,
+        name: mocks.user.updatedName,
+        profile: expect.objectContaining(mocks.user.user.profile),
+      }),
+    );
   });
 
   it('/user:id (Delete)', async () => {

@@ -2,9 +2,8 @@ import { generateMock } from '@anatine/zod-mock';
 import { zProfile } from '~/entities/profile';
 import { User, zUser } from '~/entities/user';
 
-const userWthProfile = zUser.omit({ created_at: true, updated_at: true }).extend({
-  uid: zUser.shape.uid.transform(() => 1),
-  profile: zProfile.extend({ uid: zProfile.shape.uid.transform(() => 1) }),
+const userWthProfile = zUser.omit({ uid: true, created_at: true, updated_at: true }).extend({
+  profile: zProfile.omit({ uid: true }),
 });
 
 const user: User = generateMock(userWthProfile);
