@@ -1,11 +1,10 @@
-import { ZodValidationPipe } from '@anatine/zod-nestjs';
-import { applyDecorators, Controller, Delete, Get, Post, Put, UsePipes } from '@nestjs/common';
+import { applyDecorators, Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DeleteUserParameter, GetUserParameter } from '~/api/parameters/user';
 import { GetUsersQuery } from '~/api/queries/user';
 import { User } from '~/entities/user';
 
-const controller = applyDecorators(ApiTags('user'), Controller('user'), UsePipes(ZodValidationPipe));
+const controller = applyDecorators(ApiTags('user'), Controller('user'));
 
 const create = applyDecorators(
   Post(),
