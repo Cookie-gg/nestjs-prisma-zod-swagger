@@ -1,8 +1,15 @@
-import { applyDecorators, Controller, Delete, Get, Post, Put } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { DeleteUserParameter, GetUserParameter } from '~/api/parameters/user';
-import { GetUsersQuery } from '~/api/queries/user';
+import { applyDecorators, Controller, Delete, Get, HttpStatus, Post, Put } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from '~/entities/user';
+import { CommonApiParam, CommonApiQuery } from '~/libs/swagger';
+
+const UserApiParam = () => CommonApiParam({ description: 'You can use uid or email as a unique data' });
+
+const UserApiQuery = applyDecorators(
+  CommonApiQuery({ name: 'id' }),
+  CommonApiQuery({ name: 'email' }),
+  CommonApiQuery({ name: 'name' }),
+);
 
 const controller = applyDecorators(ApiTags('user'), Controller('user'));
 
@@ -10,39 +17,35 @@ const create = applyDecorators(
   Post(),
   ApiOperation({ summary: 'Create user' }),
   ApiBody({ type: User }),
-  ApiResponse({ type: User }),
-);
-
-const get = applyDecorators(
-  Get(),
-  ApiOperation({ summary: 'Get users' }),
-  ApiQuery({ type: GetUsersQuery }),
-  ApiResponse({ type: [User] }),
+  ApiResponse({ status: HttpStatus.OK, type: User }),
 );
 
 const getMany = applyDecorators(
+  Get(),
+  ApiOperation({ summary: 'Get users' }),
+  UserApiQuery,
+  ApiResponse({ status: HttpStatus.OK, type: [User] }),
+);
+
+const get = applyDecorators(
   Get(':id'),
-  ApiParam({
-    name: 'id',
-    type: GetUserParameter,
-    description: 'You can use uid or email as a unique data',
-  }),
+  ApiOperation({ summary: 'Get a user' }),
+  UserApiParam(),
+  ApiResponse({ status: HttpStatus.OK, type: User }),
 );
 
 const del = applyDecorators(
   Delete(':id'),
-  ApiParam({
-    name: 'id',
-    type: DeleteUserParameter,
-    description: 'You can use uid or email as a unique data',
-  }),
+  ApiOperation({ summary: 'Delete a user' }),
+  UserApiParam(),
+  ApiResponse({ status: HttpStatus.OK }),
 );
 
 const update = applyDecorators(
   Put(),
-  ApiBody({ type: User }),
-  ApiResponse({ type: User }),
   ApiOperation({ summary: 'Update user by unique data' }),
+  ApiBody({ type: User }),
+  ApiResponse({ status: HttpStatus.OK, type: User }),
 );
 
 export const UserDecorator = {

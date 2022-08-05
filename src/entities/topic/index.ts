@@ -9,22 +9,22 @@ export const zTopic = extendApi(
       type: 'number',
       uniqueItems: true,
       readOnly: true,
-      optional: true,
     }),
     name: extendApi(z.string().min(1).trim(), {
       description: 'The id of a post (slug)',
       type: 'string',
       uniqueItems: true,
+      minLength: 1,
     }),
     icon: extendApi(z.string().min(1), {
       description: 'The icon of a post',
       type: 'string',
-      uniqueItems: true,
+      minLength: 1,
     }),
   }),
   {
-    title: 'Post',
-    description: 'A post schema',
+    title: 'Topic',
+    description: 'A topic schema',
   },
 );
 

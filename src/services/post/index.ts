@@ -34,7 +34,7 @@ export class PostService {
 
   async update(post: Post): Promise<Post> {
     const where = postConverter.get({ id: post.id });
-    const data = postConverter.create(post);
+    const data = postConverter.update(post);
     return this.prisma.post.update({ where, data, include });
   }
 

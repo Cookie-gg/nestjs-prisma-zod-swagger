@@ -1,10 +1,8 @@
 import { Prisma } from '@prisma/client';
-import { CreatePostInput, UpdatePostInput } from '~/api/bodies/post';
 import { DeletePostParameter, GetPostParameter } from '~/api/parameters/post';
 import { GetPostsQuery } from '~/api/queries/post';
 import { Post } from '~/entities/post';
 import { Topic } from '~/entities/topic';
-import { mocks } from '~/mocks';
 
 const connectOrCreateTopics = (
   topics?: Topic[],
@@ -21,7 +19,7 @@ const connectOrCreateTopics = (
 };
 
 const create = (post: Post): Prisma.XOR<Prisma.PostCreateInput, Prisma.PostUncheckedCreateInput> => {
-  const { uid: _, topics, author_id, ...rest } = post;
+  const { uid: _, topics, authorId, ...rest } = post;
 
   return {
     ...rest,
@@ -29,13 +27,13 @@ const create = (post: Post): Prisma.XOR<Prisma.PostCreateInput, Prisma.PostUnche
       connectOrCreate: connectOrCreateTopics(topics),
     },
     author: {
-      connect: { id: author_id },
+      connect: { id: authorId },
     },
   };
 };
 
 const update = (post: Post): Prisma.XOR<Prisma.PostUpdateInput, Prisma.PostUncheckedUpdateInput> => {
-  const { uid: _, topics, author_id, ...rest } = post;
+  const { uid: _, topics, authorId, ...rest } = post;
 
   return {
     ...rest,
@@ -43,23 +41,22 @@ const update = (post: Post): Prisma.XOR<Prisma.PostUpdateInput, Prisma.PostUnche
       connectOrCreate: connectOrCreateTopics(topics),
     },
     author: {
-      connect: { id: author_id },
+      update: { id: authorId },
     },
   };
 };
 
 const getMany = (query?: GetPostsQuery): Prisma.PostWhereInput => {
-  console.log(mocks.post.post);
   return query
     ? {
         id: { contains: query.id },
         title: { contains: query.title },
         from: { equals: query.from },
         published: { equals: query.published },
-        created_at: { equals: query.created_at },
-        updated_at: { equals: query.updated_at },
-        author_id: { contains: query.author_id },
-        topics: { some: { AND: query.topics?.map((topic) => ({ name: { contains: topic.name } })) } },
+        createdAt: { equals: query.created_at },
+        updatedAt: { equals: query.updated_at },
+        authorId: { contains: query.author_id },
+        topics: { some: { AND: query.topics?.map((topic) => ({ name: { contains: topic } })) } },
       }
     : {};
 };

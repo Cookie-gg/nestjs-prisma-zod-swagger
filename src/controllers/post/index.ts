@@ -10,27 +10,27 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @PostDecorator.Create
-  async createPost(@Body() body: Post) {
+  async createPost(@Body() body: Post): Promise<Post> {
     return await this.postService.create(zPost.parse(body));
   }
 
   @PostDecorator.GetMany
-  async getPosts(@Query() query?: GetPostsQuery) {
+  async getPosts(@Query() query?: GetPostsQuery): Promise<Post[]> {
     return await this.postService.find(query);
   }
 
   @PostDecorator.Get
-  async getPost(@Param() param: GetPostParameter) {
+  async getPost(@Param() param: GetPostParameter): Promise<Post> {
     return await this.postService.findOne(param);
   }
 
   @PostDecorator.Delete
-  async deletePost(@Param() params: DeletePostParameter) {
+  async deletePost(@Param() params: DeletePostParameter): Promise<void> {
     return await this.postService.delete(params);
   }
 
   @PostDecorator.Update
-  async updatePost(@Body() body: Post) {
+  async updatePost(@Body() body: Post): Promise<Post> {
     return await this.postService.update(body);
   }
 }

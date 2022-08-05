@@ -2,7 +2,7 @@ import { createZodDto } from '@anatine/zod-nestjs';
 import { extendApi } from '@anatine/zod-openapi';
 import { z } from 'zod';
 import { zTopic } from '~/entities/topic';
-import { zUser } from '../user';
+import { zUser } from '~/entities/user';
 
 const zFrom = z.enum(['me', 'zenn', 'qiita']);
 
@@ -13,42 +13,44 @@ export const zPost = extendApi(
       type: 'number',
       uniqueItems: true,
       readOnly: true,
-      optional: true,
     }),
     id: extendApi(z.string().min(8).max(40), {
       description: 'The id of post (slug)',
       type: 'string',
       uniqueItems: true,
+      minLength: 8,
+      maxLength: 40,
     }),
     title: extendApi(z.string().min(1), {
       description: 'The id of post (slug)',
       type: 'string',
       uniqueItems: true,
+      minLength: 1,
     }),
     from: extendApi(zFrom, {
       description: 'The id of post (slug)',
       type: 'string',
-      optional: true,
     }),
     published: extendApi(z.boolean().optional(), {
       description: 'Is a post published?',
       default: false,
-      optional: true,
       type: 'boolean',
     }),
-    created_at: extendApi(z.date().optional(), {
+    createdAt: extendApi(z.date().optional(), {
       description: 'The date which a post was created',
       readOnly: true,
-      optional: true,
-      type: 'object',
+      type: 'string',
     }),
-    updated_at: extendApi(z.date().optional(), {
+    updatedAt: extendApi(z.date().optional(), {
       description: 'The date which a post was updated',
       readOnly: true,
-      optional: true,
-      type: 'object',
+      type: 'string',
     }),
-    author_id: zUser.shape.id,
+    body: extendApi(z.string().min(1), {
+      description: 'The body of post',
+      type: 'string',
+    }),
+    authorId: zUser.shape.id,
     topics: zTopic.array(),
   }),
   {

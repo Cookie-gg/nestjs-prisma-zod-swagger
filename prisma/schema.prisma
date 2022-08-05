@@ -23,36 +23,41 @@ enum From {
 }
 
 model User {
-  uid        Int      @id @default(autoincrement())
-  id         String   @unique
-  email      String   @unique
-  name       String
-  password   String
-  published  Boolean  @default(false)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  profile    Profile?
-  posts      Post[]
+  uid       Int      @id @default(autoincrement())
+  id        String   @unique
+  email     String   @unique
+  name      String
+  password  String
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profile   Profile?
+  posts     Post[]
 }
 
 model Post {
-  uid        Int      @id @default(autoincrement())
-  id         String   @unique
-  topics     Topic[]
-  title      String
-  from       From     @default(me)
-  published  Boolean  @default(false)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  author     User     @relation(fields: [author_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  author_id  String   @unique
+  uid       Int      @id @default(autoincrement())
+  id        String   @unique
+  topics    Topic[]
+  title     String
+  from      From     @default(me)
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  authorId  String   @unique
+  body      String
 }
 
 model Profile {
-  uid       Int    @id @default(autoincrement())
-  biography String
-  user      User   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  user_id   String @unique
+  uid     Int     @id @default(autoincrement())
+  twitter String?
+  zenn    String?
+  qiita   String?
+  link    String?
+  avatar  String?
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId  String  @unique
 }
 
 model Topic {

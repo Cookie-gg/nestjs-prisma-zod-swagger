@@ -6,14 +6,33 @@ export const zProfile = extendApi(
     uid: extendApi(z.number().optional(), {
       description: 'The unique id of user',
       type: 'number',
-      nullable: true,
       uniqueItems: true,
       readOnly: true,
     }),
-    biography: extendApi(z.string(), {
-      description: 'The biography of user',
+    twitter: extendApi(z.string().optional().nullable(), {
+      description: 'Twitter profile link',
       type: 'string',
-      nullable: false,
+      nullable: true,
+    }),
+    zenn: extendApi(z.string().optional().nullable(), {
+      description: 'Zenn profile link',
+      type: 'string',
+      nullable: true,
+    }),
+    qiita: extendApi(z.string().optional().nullable(), {
+      description: 'Qiita profile link',
+      type: 'string',
+      nullable: true,
+    }),
+    link: extendApi(z.string().optional().nullable(), {
+      description: 'Your own link',
+      type: 'string',
+      nullable: true,
+    }),
+    avatar: extendApi(z.string().optional().nullable(), {
+      description: 'Your avatar icon',
+      type: 'string',
+      nullable: true,
     }),
   }),
   {

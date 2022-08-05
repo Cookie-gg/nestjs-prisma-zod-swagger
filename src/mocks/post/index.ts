@@ -1,5 +1,4 @@
 import { generateMock } from '@anatine/zod-mock';
-import { zProfile } from '~/entities/profile';
 import { Post, zPost } from '~/entities/post';
 import { zTopic } from '~/entities/topic';
 

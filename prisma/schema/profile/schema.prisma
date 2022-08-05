@@ -5,8 +5,12 @@ model User {
 }
 
 model Profile {
-  uid       Int    @id @default(autoincrement())
-  biography String
-  user      User   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  user_id   String @unique
+  uid     Int     @id @default(autoincrement())
+  twitter String?
+  zenn    String?
+  qiita   String?
+  link    String?
+  avatar  String?
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId  String  @unique
 }
